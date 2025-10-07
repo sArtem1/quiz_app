@@ -2,11 +2,13 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     password = Column(String)
+
 
 class QuizCardType(Base):
     __tablename__ = 'QuizCardType'
@@ -17,6 +19,7 @@ class QuizCardType(Base):
     tries_for_hint_count = Column(Integer, nullable=True)
     quiz_cards = relationship("QuizCard", back_populates="quiz_type_info")
 
+
 class QuizCard(Base):
     __tablename__ = 'QuizCard'
     id = Column(Integer, primary_key=True, index=True)
@@ -26,6 +29,8 @@ class QuizCard(Base):
     hint_text = Column(String, nullable=True)
     questions = relationship("Question", back_populates="quiz_card", cascade="all, delete-orphan")
     quiz_type_info = relationship("QuizCardType", back_populates="quiz_cards")
+    correct_answer = Column(Integer, nullable=False)
+
 
 class Question(Base):
     __tablename__ = 'Question'
@@ -33,6 +38,7 @@ class Question(Base):
     question_text = Column(String, nullable=False)
     quiz_card_id = Column(Integer, ForeignKey('QuizCard.id'), nullable=False)
     quiz_card = relationship("QuizCard", back_populates="questions")
+
 
 class QuizResult(Base):
     __tablename__ = 'QuizResult'
